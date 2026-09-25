@@ -13,6 +13,25 @@ const getHeaders = (isJson = true) => {
   return headers;
 };
 
+const handleResponse = async (res) => {
+  let data = {};
+  try {
+    data = await res.json();
+  } catch (e) {
+    data = {};
+  }
+
+  if (res.status === 401) {
+    localStorage.removeItem('campus_token');
+  }
+
+  if (!res.ok) {
+    throw new Error(data.message || `Request failed with status ${res.status}`);
+  }
+
+  return data;
+};
+
 export const api = {
   getBaseUrl() {
     return API_BASE;
@@ -25,9 +44,7 @@ export const api = {
       method: 'GET',
       headers: getHeaders(),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Network request failed');
-    return data;
+    return await handleResponse(res);
   },
 
   async post(url, body = {}) {
@@ -36,9 +53,7 @@ export const api = {
       headers: getHeaders(),
       body: JSON.stringify(body),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Request failed');
-    return data;
+    return await handleResponse(res);
   },
 
   async patch(url, body = {}) {
@@ -47,9 +62,7 @@ export const api = {
       headers: getHeaders(),
       body: JSON.stringify(body),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Request failed');
-    return data;
+    return await handleResponse(res);
   },
 
   async put(url, body = {}) {
@@ -58,9 +71,7 @@ export const api = {
       headers: getHeaders(),
       body: JSON.stringify(body),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Request failed');
-    return data;
+    return await handleResponse(res);
   },
 
   getExcelExportUrl() {
