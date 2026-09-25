@@ -32,7 +32,7 @@ export function App() {
   const handleExportExcel = async () => {
     try {
       const token = localStorage.getItem('campus_token');
-      const response = await fetch('/api/users/export-excel', {
+      const response = await fetch(api.getExcelExportUrl(), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Download failed');

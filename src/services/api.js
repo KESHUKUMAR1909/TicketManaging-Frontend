@@ -1,4 +1,5 @@
-const API_BASE = '/api';
+const API_BASE =
+  import.meta.env.VITE_API_URL || 'https://ticketmanaging-backend.onrender.com/api';
 
 const getHeaders = (isJson = true) => {
   const token = localStorage.getItem('campus_token');
@@ -13,6 +14,10 @@ const getHeaders = (isJson = true) => {
 };
 
 export const api = {
+  getBaseUrl() {
+    return API_BASE;
+  },
+
   async get(url, params = {}) {
     const query = new URLSearchParams(params).toString();
     const fullUrl = query ? `${API_BASE}${url}?${query}` : `${API_BASE}${url}`;
